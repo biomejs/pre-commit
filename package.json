@@ -1,0 +1,5 @@
+{
+    "name": "@biomejs/pre-commit",
+    "description": "Biome pre-commit node package",
+    "version": "0.0.0"
+}
