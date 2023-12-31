@@ -15,7 +15,7 @@ Biome provides four hooks:
 | `biome-format`  | Format the committed files |
 | `biome-lint`    | Lint and apply safe fixes to the committed files |
 
-For example, if you want to use the `biome-check' hook,
+For example, if you want to use the `biome-check` hook,
 add the following pre-commit configuration to the root of your project in a file named `.pre-commit-config.yaml`:
 
 ```yaml
