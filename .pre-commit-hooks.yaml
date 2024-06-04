@@ -6,7 +6,7 @@
     files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?)$"
 -   id: biome-check
     name: biome check
-    entry: biome check --apply --files-ignore-unknown=true --no-errors-on-unmatched
+    entry: biome check --write --files-ignore-unknown=true --no-errors-on-unmatched
     language: node
     types: [text]
     files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?)$"
@@ -18,7 +18,7 @@
     files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?)$"
 -   id: biome-lint
     name: biome lint
-    entry: biome lint --apply --files-ignore-unknown=true --no-errors-on-unmatched
+    entry: biome lint --write --files-ignore-unknown=true --no-errors-on-unmatched
     language: node
     types: [text]
     files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?)$"
