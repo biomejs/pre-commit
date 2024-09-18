@@ -43,10 +43,10 @@ repos:
     hooks:
       - id: local-biome-check
         name: biome check
-        entry: npx biome check --apply --files-ignore-unknown=true --no-errors-on-unmatched
+        entry: npx biome check --write --files-ignore-unknown=true --no-errors-on-unmatched
         language: system
         types: [text]
-        files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css)$"
+        files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css|svelte|vue|astro|graphql|gql)$"
 ```
 
 The pre-commit option `files` is optional,
