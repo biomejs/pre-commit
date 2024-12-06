@@ -5,6 +5,7 @@
     language_version: lts
     types: [text]
     files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css|svelte|vue|astro|graphql|gql)$"
+    require_serial: true
 -   id: biome-check
     name: biome check
     entry: biome check --write --files-ignore-unknown=true --no-errors-on-unmatched
@@ -12,6 +13,7 @@
     language_version: lts
     types: [text]
     files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css|svelte|vue|astro|graphql|gql)$"
+    require_serial: true
 -   id: biome-format
     name: biome format
     entry: biome format --write --files-ignore-unknown=true --no-errors-on-unmatched
@@ -19,6 +21,7 @@
     language_version: lts
     types: [text]
     files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css|svelte|vue|astro|graphql|gql)$"
+    require_serial: true
 -   id: biome-lint
     name: biome lint
     entry: biome lint --write --files-ignore-unknown=true --no-errors-on-unmatched
@@ -26,3 +29,4 @@
     language_version: lts
     types: [text]
     files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css|svelte|vue|astro|graphql|gql)$"
+    require_serial: true
