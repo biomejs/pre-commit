@@ -1,7 +1,7 @@
 name: update
 on:
   schedule:
-    - cron: "50 1 * * *"
+    - cron: "45 2/6 * * *"
   workflow_dispatch:
 
 jobs:
@@ -14,25 +14,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          cache-dependency-glob: .github/workflows/update.py
-
-      - name: set git config
-        run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+      - uses: actions/setup-node@v4
 
       - name: update tags & commits
-        run: uv run --script .github/workflows/update.py
-
-      - name: push tags & commits
-        run: |
-          # for-loop is required to trigger CI on the tags
-          for tag in $(git tag); do
-            git push origin $tag
-          done
-          git push origin HEAD:refs/heads/main
+        run: node .github/workflows/update.js
         env:
-          GH_TOKEN: ${{ github.token }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITHUB_ACTOR: github-actions[bot]
+          GITHUB_ACTOR_ID: 41898282
