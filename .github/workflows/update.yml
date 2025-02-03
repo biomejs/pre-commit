@@ -34,4 +34,4 @@ jobs:
           git push origin HEAD:refs/heads/main
         # for-loop is required to trigger CI on the tags
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
