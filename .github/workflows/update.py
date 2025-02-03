@@ -71,7 +71,7 @@ def _replace_in_package_json(new_version: str) -> None:
     package_json = Path(REPO_DIR, "package.json")
     package = json.loads(package_json.read_text())
     package["dependencies"][PACKAGE_NAME] = new_version
-    package_json.write_text(json.dumps(package))
+    package_json.write_text(json.dumps(package, indent=2))
 
 
 def stage_commit_and_tag(tag: str) -> None:
