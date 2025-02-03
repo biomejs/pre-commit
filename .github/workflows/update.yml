@@ -1,0 +1,38 @@
+name: update
+on:
+  schedule:
+    - cron: "50 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: .github/workflows/update.py
+
+      - name: set git config
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+
+      - name: update tags & commits
+        run: uv run --script .github/workflows/update.py
+
+      - name: push tags & commits
+        run: |
+          # for-loop is required to trigger CI on the tags
+          for tag in $(git tag); do
+            git push origin $tag
+          done
+          git push origin HEAD:refs/heads/main
+        env:
+          GH_TOKEN: ${{ github.token }}
