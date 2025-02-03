@@ -25,7 +25,8 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - run: uv run --script .github/workflows/update.py
+      - name: create tags & commits
+        run: uv run --script .github/workflows/update.py
 
       - name: push tags & commits
         run: |
