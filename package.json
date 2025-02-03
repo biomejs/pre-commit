@@ -1,5 +1,8 @@
 {
-    "name": "@biomejs/pre-commit",
-    "description": "Biome pre-commit node package",
-    "version": "0.0.0"
+  "name": "@biomejs/pre-commit",
+  "description": "Biome pre-commit node package",
+  "version": "0.0.0",
+  "dependencies": {
+    "@biomejs/biome": "1.9.4"
+  }
 }
