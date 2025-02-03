@@ -1,6 +1,5 @@
 name: update
 on:
-  pull_request:
   schedule:
     - cron: "50 1 * * *"
   workflow_dispatch:
