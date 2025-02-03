@@ -15,23 +15,17 @@ PACKAGE_NAME = "@biomejs/biome"
 
 
 def main() -> int:
-    tags = set(get_existing_tags())
-    versions = set(get_all_versions())
-    expected_tags = {f"v{t}" for t in versions}
-    missing_tags = expected_tags - tags
+    tags = get_existing_tags()
+    versions = get_all_versions()
+    missing_tags = get_missing_tags(tags, versions)
     if not missing_tags:
         print("No new versions found")
         return 0
     for tag in sorted(missing_tags):
         print(f"Updating to {tag}")
-        version = _to_version(tag)
-        update_files(version)
+        update_files(tag)
         stage_commit_and_tag(tag)
     return 0
-
-
-def _to_version(tag: str) -> str:
-    return tag.replace("v", "", 1)
 
 
 def get_existing_tags() -> list[str]:
@@ -45,22 +39,34 @@ def get_all_versions() -> list[str]:
     return sorted(all_versions)
 
 
+def get_missing_tags(existing_tags: list[str], all_versions: list[str]) -> set[str]:
+    tags = set(existing_tags)
+    versions = set(all_versions)
+    expected_tags = {f"v{t}" for t in versions}
+    return expected_tags - tags
+
+
 def _get_node_package_versions(package_name: str) -> list[str]:
     cmd = ("npm", "view", package_name, "--json")
     output = json.loads(subprocess.check_output(cmd))
     return output["versions"]
 
 
-def update_files(new_version: str) -> None:
-    _replace_in_readme(new_version)
-    _replace_in_package_json(new_version)
+def update_files(tag: str) -> None:
+    version = to_version(tag)
+    _replace_in_readme(version)
+    _replace_in_package_json(version)
 
 
-def _replace_in_readme(new_version: str) -> None:
+def to_version(tag: str) -> str:
+    return tag.replace("v", "", 1)
+
+
+def _replace_in_readme(version: str) -> None:
     readme_file = Path(REPO_DIR, "README.md")
     readme = readme_file.read_text()
     current_version = __get_current_version()
-    new_readme = readme.replace(current_version, new_version)
+    new_readme = readme.replace(current_version, version)
     readme_file.write_text(new_readme)
 
 
@@ -69,10 +75,10 @@ def __get_current_version() -> str:
     return package["dependencies"][PACKAGE_NAME]
 
 
-def _replace_in_package_json(new_version: str) -> None:
+def _replace_in_package_json(version: str) -> None:
     package_json = Path(REPO_DIR, "package.json")
     package = json.loads(package_json.read_text())
-    package["dependencies"][PACKAGE_NAME] = new_version
+    package["dependencies"][PACKAGE_NAME] = version
     package_json.write_text(json.dumps(package, indent=2))
 
 
