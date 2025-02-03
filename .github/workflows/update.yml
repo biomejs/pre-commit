@@ -27,7 +27,8 @@ jobs:
 
       - run: uv run --script .github/workflows/update.py
 
-      - run: |
+      - name: push tags & commits
+        run: |
           # for-loop is required to trigger CI on the tags
           for tag in $(git tag); do
             git push origin $tag
