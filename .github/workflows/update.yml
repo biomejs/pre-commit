@@ -27,10 +27,10 @@ jobs:
       - run: uv run --script .github/workflows/update.py
 
       - run: |
+          # for-loop is required to trigger CI on the tags
           for tag in $(git tag); do
             git push origin $tag
           done
           git push origin HEAD:refs/heads/main
-        # for-loop is required to trigger CI on the tags
         env:
           GH_TOKEN: ${{ github.token }}
