@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """Run with https://docs.astral.sh/uv/guides/scripts:
 
 .. code-block:: shell
