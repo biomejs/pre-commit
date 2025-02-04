@@ -3,6 +3,7 @@ const exec = util.promisify(require("child_process").exec);
 const fs = require("fs").promises;
 const path = require("path");
 
+const { DEFAULT_BRANCH, GITHUB_ACTOR, GITHUB_ACTOR_ID } = process.env;
 const REPO_DIR = path.resolve(__dirname, "..", "..");
 const PACKAGE_NAME = "@biomejs/biome";
 
@@ -14,11 +15,13 @@ async function main() {
       return 0;
     }
 
+    await setGitConfig();
     for (const tag of missingTags) {
       console.log(`Updating to ${tag}`);
       await updateFiles(tag);
-      await stageCommitAndTag(tag);
+      await commitAndPushTag(tag);
     }
+    await git("push", "origin", `HEAD:refs/heads/${DEFAULT_BRANCH}`);
     return 0;
   } catch (error) {
     console.error("An error occurred:", error);
@@ -46,6 +49,12 @@ async function getExistingTags() {
     .split("\n")
     .filter((t) => t.startsWith("v"))
     .sort();
+}
+
+async function setGitConfig() {
+  const email = `${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com`;
+  await git("config", "user.name", GITHUB_ACTOR);
+  await git("config", "user.email", email);
 }
 
 async function getNodePackageVersions(packageName) {
@@ -86,10 +95,11 @@ async function replaceInPackageJson(version) {
   );
 }
 
-async function stageCommitAndTag(tag) {
+async function commitAndPushTag(tag) {
   await git("add", "package.json", "README.md");
   await git("commit", "-m", `"MAINT: upgrade to ${PACKAGE_NAME} ${tag}"`);
   await git("tag", tag);
+  await git("push", "origin", tag);
 }
 
 async function git(...cmd) {
