@@ -1,0 +1,25 @@
+name: update
+on:
+  schedule:
+    - cron: "45 1 * * *"
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+
+      - name: update tags & commits
+        run: node .github/workflows/update.js
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITHUB_ACTOR: github-actions[bot]
+          GITHUB_ACTOR_ID: 41898282

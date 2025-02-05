@@ -1,0 +1,21 @@
+name: dependabot-pr
+on: pull_request
+
+jobs:
+  dependabot-metadata:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      dependency-names: ${{ steps.dependabot-metadata.outputs.dependency-names }}
+    steps:
+      - id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v2
+
+  biome-update:
+    needs: dependabot-metadata
+    if: ${{ contains(needs.dependabot-metadata.outputs.dependency-names, 'biome') }}
+    permissions:
+      contents: write
+    uses: ./.github/workflows/update.yml
