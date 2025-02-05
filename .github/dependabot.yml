@@ -4,8 +4,14 @@ updates:
     directory: /
     schedule:
       interval: daily
-    commit-message:
-      prefix: chore(github-actions)
     groups:
       github-actions:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+    groups:
+      npm:
         patterns: ["*"]

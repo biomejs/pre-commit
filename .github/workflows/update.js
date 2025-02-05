@@ -49,6 +49,7 @@ async function setGitConfig() {
   const email = `${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com`;
   await git("config", "user.name", GITHUB_ACTOR);
   await git("config", "user.email", email);
+  await git("checkout", DEFAULT_BRANCH);
 }
 
 async function getNodePackageVersions(packageName) {
@@ -66,7 +67,7 @@ async function updateFiles(version) {
 async function updateReadme(version) {
   const readmeFile = path.join(REPO_DIR, "README.md");
   const readme = await fs.readFile(readmeFile, "utf8");
-  const newReadme = readme.replace(/rev: v\d+\.\d+\.\d+/i, `rev: v${version}`);
+  const newReadme = readme.replace(/rev:\s+\S+/i, `rev: v${version}`);
   await fs.writeFile(readmeFile, newReadme, "utf8");
 }
 
