@@ -21,7 +21,7 @@ add the following pre-commit configuration to the root of your project in a file
 ```yaml
 repos:
   - repo: https://github.com/biomejs/pre-commit
-    rev: v1.2.1 # Use the sha / tag you want to point at
+    rev: v1.2.2 # Use the sha / tag you want to point at
     hooks:
       - id: biome-check
 ```
