@@ -18,4 +18,5 @@ jobs:
     if: ${{ contains(needs.dependabot-metadata.outputs.dependency-names, 'biome') }}
     permissions:
       contents: write
+      pull-requests: write
     uses: ./.github/workflows/update.yml
