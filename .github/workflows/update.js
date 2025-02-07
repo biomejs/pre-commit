@@ -52,7 +52,7 @@ async function getExistingVersions() {
 }
 
 function getMessage(version) {
-  return `MAINT: upgrade ${PACKAGE_NAME} ${version}`;
+  return `build(deps): bump ${PACKAGE_NAME} to ${version}`;
 }
 
 async function setGitConfig(versions) {
@@ -65,7 +65,7 @@ async function setGitConfig(versions) {
 }
 
 function getBranchName(version) {
-  return `maint/upgrade-${PACKAGE_NAME.replace("/", "-")}-${version}`;
+  return `build/bump-${PACKAGE_NAME.replace("/", "-")}-${version}`;
 }
 
 async function updateFiles(version) {
