@@ -95,6 +95,8 @@ async function updatePackageJson(version) {
 async function commitAndPushTag(version) {
   const tag = `v${version}`;
   const message = getMessage(version);
+
+  await git("add", "README.md", "package.json", "package-lock.json");
   await git("commit", "--message", `"${message}"`);
   await git("tag", "--message", `"${message}"`, "--annotate", tag);
 }
