@@ -51,6 +51,10 @@ async function getExistingVersions() {
     .sort();
 }
 
+function getMessage(version) {
+  return `MAINT: upgrade ${PACKAGE_NAME} ${version}`;
+}
+
 async function setGitConfig(versions) {
   const email = `${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com`;
 
@@ -62,10 +66,6 @@ async function setGitConfig(versions) {
 
 function getBranchName(version) {
   return `maint/upgrade-${PACKAGE_NAME.replace("/", "-")}-${version}`;
-}
-
-function getMessage(version) {
-  return `MAINT: upgrade ${PACKAGE_NAME} ${version}`;
 }
 
 async function updateFiles(version) {
@@ -94,16 +94,21 @@ async function updatePackageJson(version) {
 
 async function commitAndPushTag(version) {
   const tag = `v${version}`;
-  await git("add", "README.md", "package.json", "package-lock.json");
-  await git("commit", "-m", `"${getMessage(version)}"`);
-  await git("tag", tag);
-  await git("push", "origin", tag);
+  const message = getMessage(version);
+  await git("commit", "--message", `"${message}"`);
+  await git("tag", "--message", `"${message}"`, "--annotate", tag);
 }
 
 async function mergePullRequest(versions) {
-  await git("push", "--set-upstream", "origin", getBranchName(versions.at(-1)));
+  await git(
+    "push",
+    "--follow-tags",
+    "--set-upstream",
+    "origin",
+    getBranchName(versions.at(-1))
+  );
   await exec(`gh pr create --fill --title "${getMessage(versions.at(-1))}"`);
-  await exec("gh pr merge --rebase --delete-branch");
+  await exec("gh pr merge --merge --delete-branch");
 }
 
 async function git(...cmd) {
