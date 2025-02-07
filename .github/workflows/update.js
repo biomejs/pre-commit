@@ -16,14 +16,14 @@ async function main() {
     return;
   }
 
-  await setGitConfig();
+  await setGitConfig(missingVersions);
   for (const version of missingVersions) {
-    console.log(`Updating to ${PACKAGE_NAME} ${version}`);
+    console.log(getMessage(version));
     await updateFiles(version);
-    await commitAndPushTag(version);
+    await commitTag(version);
   }
 
-  await git("push", "origin", `HEAD:refs/heads/${DEFAULT_BRANCH}`);
+  await mergePullRequest(missingVersions);
 }
 
 async function getMissingVersions() {
@@ -37,6 +37,12 @@ async function getAllVersions() {
   return allVersions.filter((v) => !v.includes("nightly")).sort();
 }
 
+async function getNodePackageVersions(packageName) {
+  const { stdout } = await exec(`npm view ${packageName} --json`);
+  const output = JSON.parse(stdout);
+  return output.versions;
+}
+
 async function getExistingVersions() {
   const existingTags = await git("tag", "--list");
   return existingTags
@@ -45,17 +51,21 @@ async function getExistingVersions() {
     .sort();
 }
 
-async function setGitConfig() {
+function getMessage(version) {
+  return `build(deps): bump ${PACKAGE_NAME} to ${version}`;
+}
+
+async function setGitConfig(versions) {
   const email = `${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com`;
+
   await git("config", "user.name", GITHUB_ACTOR);
   await git("config", "user.email", email);
   await git("checkout", DEFAULT_BRANCH);
+  await git("checkout", "-b", getBranchName(versions.at(-1)));
 }
 
-async function getNodePackageVersions(packageName) {
-  const { stdout } = await exec(`npm view ${packageName} --json`);
-  const output = JSON.parse(stdout);
-  return output.versions;
+function getBranchName(version) {
+  return `build/bump-${PACKAGE_NAME.replace("/", "-")}-${version}`;
 }
 
 async function updateFiles(version) {
@@ -82,12 +92,25 @@ async function updatePackageJson(version) {
   );
 }
 
-async function commitAndPushTag(version) {
+async function commitTag(version) {
   const tag = `v${version}`;
+  const message = getMessage(version);
+
   await git("add", "README.md", "package.json", "package-lock.json");
-  await git("commit", "-m", `"MAINT: upgrade to ${PACKAGE_NAME} ${version}"`);
-  await git("tag", tag);
-  await git("push", "origin", tag);
+  await git("commit", "--message", `"${message}"`);
+  await git("tag", "--annotate", tag, "--message", `"${message}"`);
+}
+
+async function mergePullRequest(versions) {
+  await git(
+    "push",
+    "--follow-tags",
+    "--set-upstream",
+    "origin",
+    getBranchName(versions.at(-1))
+  );
+  await exec(`gh pr create --fill --title "${getMessage(versions.at(-1))}"`);
+  await exec("gh pr merge --merge --delete-branch");
 }
 
 async function git(...cmd) {
