@@ -110,7 +110,7 @@ async function mergePullRequest(versions) {
     getBranchName(versions.at(-1))
   );
   await exec(`gh pr create --fill --title "${getMessage(versions.at(-1))}"`);
-  await exec("gh pr merge --merge --delete-branch");
+  await exec("gh pr merge --auto --merge --delete-branch");
 }
 
 async function git(...cmd) {
