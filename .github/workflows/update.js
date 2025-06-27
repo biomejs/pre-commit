@@ -29,7 +29,11 @@ async function main() {
 async function getMissingVersions() {
   const allVersions = await getAllVersions();
   const existingVersions = await getExistingVersions();
-  return allVersions.filter((v) => !existingVersions.includes(v)).sort();
+  const ignoredVersions = await getIgnoredVersions();
+  const excludedVersions = new Set([...existingVersions, ...ignoredVersions]);
+  return allVersions
+    .filter((v) => !excludedVersions.has(v))
+    .sort();
 }
 
 async function getAllVersions() {
@@ -41,6 +45,15 @@ async function getNodePackageVersions(packageName) {
   const { stdout } = await exec(`npm view ${packageName} --json`);
   const output = JSON.parse(stdout);
   return output.versions;
+}
+
+async function getIgnoredVersions() {
+  const ignoreFile = path.join(REPO_DIR, "ignored-versions.txt");
+  const ignores = await fs.readFile(ignoreFile, "utf8");
+  return ignores
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"));
 }
 
 async function getExistingVersions() {
