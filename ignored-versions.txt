@@ -1,0 +1,12 @@
+# This file contains @biomejs/biome versions that should not be mirrored.
+# This is an escape hatch to work around broken upstream releases.
+
+# Lines beginning with a hash sign (like this one) are ignored.
+# Empty lines are ignored.
+
+# Versions SHOULD NOT use `v` prefix, they are NPM package versions (semver).
+
+# https://github.com/biomejs/biome/issues/6435
+2.0.1
+2.0.2
+2.0.3
