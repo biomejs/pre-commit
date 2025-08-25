@@ -40,7 +40,7 @@ repos:
     hooks:
       - id: local-biome-check
         name: biome check
-        entry: npx biome check --write --files-ignore-unknown=true --no-errors-on-unmatched
+        entry: npx biome check --write --files-ignore-unknown=true --no-errors-on-unmatched --error-on-warnings
         language: system
         types: [text]
         files: "\\.(jsx?|tsx?|c(js|ts)|m(js|ts)|d\\.(ts|cts|mts)|jsonc?|css|svelte|vue|astro|graphql|gql)$"
