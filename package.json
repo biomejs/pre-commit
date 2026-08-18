@@ -6,6 +6,6 @@
     "biome": "./node_modules/@biomejs/biome/bin/biome"
   },
   "dependencies": {
-    "@biomejs/biome": "2.5.8"
+    "@biomejs/biome": "2.5.9"
   }
 }
