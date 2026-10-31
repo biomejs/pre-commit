@@ -8,12 +8,12 @@ The following section assumes that you [installed pre-commit](https://pre-commit
 
 Biome provides four hooks:
 
-| hook `id`      | description                                                                 |
-| -------------- | --------------------------------------------------------------------------- |
-| `biome-ci`     | Check formatting, check if imports are organized, and lints                 |
-| `biome-check`  | Format, organize imports, lint, and apply safe fixes to the committed files |
-| `biome-format` | Format the committed files                                                  |
-| `biome-lint`   | Lint and apply safe fixes to the committed files                            |
+| hook `id`      | description                                                                                                                 |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `biome-ci`     | Check formatting, check if imports are organized, and lints (same rules as `biome-check`, but read-only)                    |
+| `biome-check`  | Format, organize imports, lint, and apply safe fixes to the committed files (same results as `biome-format` + `biome-lint`) |
+| `biome-format` | Format the committed files                                                                                                  |
+| `biome-lint`   | Lint and apply safe fixes to the committed files                                                                            |
 
 For example, if you want to use the `biome-check` hook,
 add the following pre-commit configuration to the root of your project in a file named `.pre-commit-config.yaml`:
